@@ -304,10 +304,13 @@ void Desktop::mineBatch() {
         if(gen!=generation)return; miningPending=false;
         if(!err.isEmpty()) {miningWanted=false;error("Mining stopped: "+err);updateUi();return;}
         const auto hashes=v.toArray(); found+=hashes.size();
-        for(const auto& hash:hashes) rpc.call("getblock",{hash},[this,gen](QJsonValue block,QString e){
+        for(const auto& hash:hashes) rpc.call("getblock",{hash,2},[this,gen](QJsonValue block,QString e){
             if(gen!=generation||!e.isEmpty())return;
             const auto txs=block.toObject().value("tx").toArray(); if(txs.isEmpty())return;
-            rpc.call("gettransaction",{txs.first()},[this,gen](QJsonValue tx,QString e2){ if(gen==generation&&e2.isEmpty()) {sessionRewards+=tx.toObject().value("amount").toDouble(); updateUi();} });
+            // Wallet credit excludes immature coinbase rewards. Read the actual
+            // coinbase outputs so this session counter is correct before maturity.
+            for(const auto& out:txs.first().toObject().value("vout").toArray())sessionRewards+=out.toObject().value("value").toDouble();
+            updateUi();
         });
         refresh(); updateUi();
         if(miningWanted) QTimer::singleShot(profile==0?900:profile==1?250:25,this,&Desktop::mineBatch);

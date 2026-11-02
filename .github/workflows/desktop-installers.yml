@@ -61,6 +61,18 @@ jobs:
           root = pathlib.Path('desktop/dist')
           packages = sorted(p for p in root.iterdir() if p.is_file())
           (root / 'SHA256SUMS.txt').write_text(''.join(hashlib.sha256(p.read_bytes()).hexdigest() + '  ' + p.name + '\n' for p in packages))
+      - name: Verify Linux installed package
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get install -y ./desktop/dist/*.deb
+          xvfb-run -a /usr/bin/Whippet --regtest --smoke-test --data-dir "$RUNNER_TEMP/whippet-install-test"
+          test -s "$RUNNER_TEMP/whippet-install-test/chain/regtest/regtest/wallet.dat"
+      - name: Verify macOS deployed app
+        if: runner.os == 'macOS'
+        run: |
+          cmake --install desktop/build --prefix "$RUNNER_TEMP/whippet-stage"
+          env -u QT_PLUGIN_PATH -u QML2_IMPORT_PATH "$RUNNER_TEMP/whippet-stage/Whippet.app/Contents/MacOS/Whippet" --regtest --smoke-test --data-dir "$RUNNER_TEMP/whippet-install-test"
+          test -s "$RUNNER_TEMP/whippet-install-test/chain/regtest/regtest/wallet.dat"
       - uses: actions/upload-artifact@v4
         with:
           name: Whippet-${{ matrix.platform }}

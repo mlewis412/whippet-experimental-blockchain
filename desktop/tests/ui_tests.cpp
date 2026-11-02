@@ -22,6 +22,7 @@ private slots:
         QTest::mouseClick(start,Qt::LeftButton);
         QTRY_COMPARE(start->text(),QString("Stop mining"));
         QTRY_VERIFY_WITH_TIMEOUT([&]{for(auto* text:window.findChildren<QLabel*>())if(text->objectName()=="value"&&text->text().toInt()>=22)return true;return false;}(),45000);
+        QTRY_VERIFY([&]{for(auto* text:window.findChildren<QLabel*>())if(text->objectName()=="value"&&text->text().endsWith(" WHT")&&text->text().section(' ',0,0).toDouble()>0)return true;return false;}());
         QVERIFY(window.grab().save(screenshots+"/silver-mining.png"));
         QTest::mouseClick(start,Qt::LeftButton);
         QTRY_COMPARE_WITH_TIMEOUT(start->text(),QString("Start mining"),15000);
