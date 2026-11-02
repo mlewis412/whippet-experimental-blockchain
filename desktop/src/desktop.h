@@ -4,7 +4,7 @@
 
 class Desktop : public QMainWindow {
 public:
-    Desktop(const QString& dataRoot, const QString& networkOverride = {}, bool smoke = false);
+    Desktop(const QString& dataRoot, const QString& networkOverride = {}, bool smoke = false, int nodePortOverride = 0);
     ~Desktop() override;
 protected:
     void closeEvent(QCloseEvent* event) override;
@@ -18,6 +18,7 @@ private:
     bool ready = false, miningWanted = false, miningPending = false, closing = false;
     bool restarting = false, transactionBusy = false, refreshPending = false;
     int peers = 0, height = 0, found = 0, generation = 0;
+    int nodePortOverride = 0;
     double balance = 0, immature = 0, sessionRewards = 0;
     bool initialDownload = true;
     QElapsedTimer elapsed;

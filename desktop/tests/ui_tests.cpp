@@ -12,7 +12,8 @@ private slots:
     void compactWindowAndMiningLifecycle() {
         qApp->setQuitOnLastWindowClosed(false);qApp->setStyle("Fusion");
         QTemporaryDir temporary; QVERIFY(temporary.isValid());
-        Desktop window(temporary.path(),"regtest");window.show();
+        QTcpServer reservation;QVERIFY(reservation.listen(QHostAddress::LocalHost,0));const int port=reservation.serverPort();reservation.close();
+        Desktop window(temporary.path(),"regtest",false,port);window.show();
         auto cleanup=qScopeGuard([&]{window.close();QElapsedTimer wait;wait.start();while(window.isVisible()&&wait.elapsed()<30000){QCoreApplication::processEvents();QTest::qWait(20);}});
         auto* start=named(window,"Start mining");QVERIFY(start);
         QTRY_VERIFY_WITH_TIMEOUT(start->isEnabled(),40000);

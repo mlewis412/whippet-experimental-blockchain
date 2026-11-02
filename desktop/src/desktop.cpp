@@ -40,9 +40,9 @@ void finishDialog(QDialog* d, QVBoxLayout* l) {
 }
 }
 
-Desktop::Desktop(const QString& dataRoot, const QString& networkOverride, bool smoke)
+Desktop::Desktop(const QString& dataRoot, const QString& networkOverride, bool smoke, int portOverride)
     : rpc(this), node(this), refreshTimer(this), sessionTimer(this),
-      settings(dataRoot + "/desktop.ini", QSettings::IniFormat), root(dataRoot) {
+      settings(dataRoot + "/desktop.ini", QSettings::IniFormat), root(dataRoot), nodePortOverride(portOverride) {
     QDir().mkpath(root);
     instanceLock = std::make_unique<QLockFile>(root + "/desktop.lock");
     if (!instanceLock->tryLock(0)) throw std::runtime_error("Whippet is already open for this data folder.");
@@ -218,6 +218,7 @@ void Desktop::startNode() {
     }
     QFile conf(dataDir+"/whippet.conf"); if(!conf.exists()) { if(!conf.open(QIODevice::WriteOnly)) {error("Cannot write to the selected data folder.");return;} conf.close(); }
     int port=network=="regtest"?53675:network=="test"?43675:33675;
+    if(nodePortOverride>0&&nodePortOverride<=65535)port=nodePortOverride;
     QString cookie=dataDir+(network=="regtest"?"/regtest":network=="test"?"/testnet3":"")+"/.cookie";
     rpc.configure(port,cookie);
     QStringList args{"-server=1","-listen=0","-rpcbind=127.0.0.1","-rpcallowip=127.0.0.1", "-rpcport="+QString::number(port),"-datadir="+dataDir,"-dbcache="+settings.value("cache",96).toString(),"-maxconnections="+settings.value("connections",8).toString(),"-maxuploadtarget="+settings.value("upload",128).toString(),"-prune="+settings.value("prune",3072).toString(),"-uacomment=WhippetDesktop"};
