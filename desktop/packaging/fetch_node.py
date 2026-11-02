@@ -24,7 +24,9 @@ def fetch(target=None):
     }[target]
     vendor = BASE / "vendor"
     manifest = vendor / "SHA256SUMS.txt"
-    if hashlib.sha256(manifest.read_bytes()).hexdigest() != MANIFEST_SHA256:
+    # Git on Windows may check this text file out with CRLF line endings.
+    # Authenticate the canonical upstream LF bytes, without changing any entries.
+    if hashlib.sha256(manifest.read_bytes().replace(b"\r\n", b"\n")).hexdigest() != MANIFEST_SHA256:
         raise RuntimeError("Pinned checksum manifest failed verification")
     hashes = {name: digest for digest, name in (line.split() for line in manifest.read_text().splitlines())}
     archive = vendor / filename
