@@ -1,0 +1,23 @@
+Whippet Desktop 0.1.0
+
+Whippet Core 1.3.1 (MIT)
+https://github.com/chromatic/whippet-experimental-blockchain/tree/v1.3.1
+Bundled unchanged from the upstream release. See COPYING for its license.
+The pinned release checksum manifest is included in this package.
+
+Qt 6 (LGPL v3 / GPL v3 / commercial alternatives)
+https://www.qt.io/licensing/open-source-lgpl-obligations
+https://download.qt.io/archive/qt/6.8/6.8.3/submodules/
+This application links dynamically to Qt. Users may replace Qt libraries with
+compatible modified libraries. No restriction is placed on reverse engineering
+for debugging modifications to those libraries. Qt library sources and license
+texts are available from the URLs above; copies of applicable license texts
+are also distributed under share/whippet/licenses.
+
+QR Code generator v1.8.0 (MIT), Copyright (c) Project Nayuki.
+https://github.com/nayuki/QR-Code-generator/tree/v1.8.0
+The complete license notice appears in the bundled qrcodegen source files.
+
+Release packages are unsigned development builds. Windows/macOS signing and
+Apple notarization must be configured by the release owner before a public
+consumer distribution. No signing credentials are stored in this repository.

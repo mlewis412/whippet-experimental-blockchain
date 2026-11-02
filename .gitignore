@@ -133,3 +133,15 @@ stage/
 *.iws
 *.iml
 *.ipr
+
+# Native desktop build dependencies and generated packages
+/.build-tools/
+/.qt/
+/desktop/build*/
+/desktop/dist/
+/desktop/vendor/windows/
+/desktop/vendor/*.zip
+/desktop/vendor/*.tar.gz
+/desktop/vendor/*-node/
+/desktop/test-data/
+/desktop/screenshots/

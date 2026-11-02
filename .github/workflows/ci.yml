@@ -17,6 +17,8 @@ on:
     # have nothing to do with them. Only the self-contained Go and JS trees
     # belong here.
     paths-ignore:
+      - 'desktop/**'
+      - '.github/workflows/desktop-installers.yml'
       - 'doc/**'
       - 'contrib/uap-*/**'
       - 'contrib/faucet/**'
@@ -25,6 +27,8 @@ on:
       - '**/*.md'
   pull_request:
     paths-ignore:
+      - 'desktop/**'
+      - '.github/workflows/desktop-installers.yml'
       - 'doc/**'
       - 'contrib/uap-*/**'
       - 'contrib/faucet/**'

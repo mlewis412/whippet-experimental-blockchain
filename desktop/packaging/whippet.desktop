@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Whippet
+Comment=Whippet wallet, miner and full node
+Exec=/usr/bin/Whippet
+Icon=whippet
+Terminal=false
+Categories=Network;Finance;
